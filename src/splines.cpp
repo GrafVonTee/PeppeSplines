@@ -13,9 +13,9 @@ long double GetH(std::vector<Point> values, int index){
 
 Sweeps GetSweeps(std::vector<Point> values, int index) {
     Sweeps swp;
-    swp.F = (values[index + 1].y - values[index].y) / GetH(values, index + 1);
-    if (index > 0)
-        swp.F -= (values[index].y - values.at(index - 1).y) / GetH(values, index);
+    swp.F = (values[index + 1].y - values[index].y) / GetH(values, index + 1)
+            - values[index].y / GetH(values, index);
+    swp.F += (values.at(index - 1).y) / GetH(values, index);
     swp.A = GetH(values, index)/6;
     swp.B = (GetH(values, index) + GetH(values, index + 1))/3;
     swp.C = GetH(values, index + 1)/6;
@@ -39,11 +39,10 @@ long double GetBeta(std::vector<Point> values, int index){
         / (swp.A * GetAlpha(values, index - 1) + swp.B);
 }
 long double GetGamma(std::vector<Point> values, int index){
-    Sweeps swp;
     if(index == 0 || index == values.size() - 1)
         return 0;
-    if(index == values.size() - 2) {
-        swp = GetSweeps(values, index);
+    if(index == 1 || index == values.size() - 2) {
+        Sweeps swp = GetSweeps(values, index);
         return (swp.F - swp.A * GetBeta(values, index))/(swp.A * GetAlpha(values, index) + swp.B);
     }
     return GetAlpha(values, index + 1) * GetGamma(values, index + 1)
