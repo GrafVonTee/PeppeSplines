@@ -36,7 +36,9 @@ def spline(xs, ys, x):
     i = 0
     vals = []
 
-    for xi in x:
+    for xi in x: # for (int i = 0; i < new_values.size(); ++i);
+        # long double x = new_values[i].x
+        # new_values[i].y = val
         while (i < len(xs) - 2) and not (xs[i] <= xi <= xs[i + 1]):
             i += 1
         prt1 = (xs[i + 1] - xi) / h(i + 1)
@@ -44,8 +46,10 @@ def spline(xs, ys, x):
         prt3 = ((xs[i + 1] - xi) ** 3 - h(i + 1) ** 2 * (xs[i + 1] - xi)) / (6 * h(i + 1))
         prt4 = ((xi - xs[i]) ** 3 - h(i + 1) ** 2 * (xi - xs[i])) / (6 * h(i + 1))
         val = ys[i] * prt1 + ys[i + 1] * prt2 + gamma(i) * prt3 + gamma(i + 1) * prt4
+        '''
         if abs(xi - xs[i]) < 1e-7 and abs(val - ys[i]) > 1e-7:
             print(xs[i + 1], xi, xs[i])
             print(prt1, prt2, prt3, prt4, val, ys[i])
+        '''
         vals += [val]
     return vals
