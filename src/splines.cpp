@@ -15,7 +15,8 @@ Sweeps GetSweeps(std::vector<Point> values, int index) {
     Sweeps swp;
     swp.F = (values[index + 1].y - values[index].y) / GetH(values, index + 1)
             - values[index].y / GetH(values, index);
-    swp.F += (values.at(index - 1).y) / GetH(values, index);
+    if (index > 0)
+        swp.F += (values.at(index - 1).y) / GetH(values, index);
     swp.A = GetH(values, index)/6;
     swp.B = (GetH(values, index) + GetH(values, index + 1))/3;
     swp.C = GetH(values, index + 1)/6;
