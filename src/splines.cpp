@@ -55,7 +55,8 @@ void CreateSpline(const std::vector<Point> &origValues, std::vector<Point> &newV
     for (int j = 0; j < newValues.size(); ++j){
         long double x = newValues[j].x;
         while ((i < (origValues.size() - 2))
-            && !((origValues[i].x <= x) && (x <= origValues[i + 1].x)) ){
+            && !((origValues[i].x <= x) && (x <= origValues[i + 1].x))
+            && (x >= origValues[i].x)) {
             i += 1;
         }
         long double prt1 = (origValues[i + 1].x - x) / GetH(origValues, i + 1);
