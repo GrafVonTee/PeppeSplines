@@ -4,30 +4,29 @@
 #include "splines.h"
 #include "writer.h"
 #include "parser.h"
+#include "intersection.h"
 
 const long double eps = 1e-3;
-const int c_steps = 1e3;
+const long int c_steps = 1e3;
 
-ArrayPoint GetArrange(long double fromV, long double toV) {
-    ArrayPoint newArrange;
-    newArrange.reserve(c_steps);
-    for (long double xi = fromV; xi <= toV; xi += (toV - fromV) * eps) {
-        Point p = {xi, 0};
-        newArrange.push_back(p);
-
-    }
-    return newArrange;
+void PrintPoints(ArrayPoints arr) {
+    for (auto a : arr)
+        printf("(%Lf; %Lf), ", a.x, a.y);
+    printf("\n");
 }
 
 int main() {
+    // Define new Variables
+    long double a(-30), b(30);
+
     // Read and Parse Critical Points
-    ArrayPoint firstSpline = ParsePoints(GetStringFromFile("../Input and tests/1.txt"));
-    ArrayPoint secondSpline = ParsePoints(GetStringFromFile("../Input and tests/2.txt"));
+    ArrayPoints firstSpline = ParsePoints(GetStringFromFile("../Input and tests/1.txt"));
+    ArrayPoints secondSpline = ParsePoints(GetStringFromFile("../Input and tests/2.txt"));
 
     // Initialize Splines
-    ArrayPoint newFirstSpline = GetArrange(-30, 10);//fmaxl(firstSpline[0].x, secondSpline[0].x),
+    ArrayPoints newFirstSpline = GetArrange(a, b, c_steps);//fmaxl(firstSpline[0].x, secondSpline[0].x),
                                            //fminl(firstSpline.back().x, secondSpline.back().x));
-    ArrayPoint newSecondSpline = GetArrange(-30, 10);//fmaxl(firstSpline[0].x, secondSpline[0].x),
+    ArrayPoints newSecondSpline = GetArrange(a, b, c_steps);//fmaxl(firstSpline[0].x, secondSpline[0].x),
                                             //fminl(firstSpline.back().x, secondSpline.back().x));
 
     // Build Splines
@@ -38,5 +37,11 @@ int main() {
     WritePointsIntoFile(newFirstSpline, "../Input and tests/1.out");
     WritePointsIntoFile(newSecondSpline, "../Input and tests/2.out");
 
+    ArrayPoints minimalDistance = FindDistanceOrIntersection(
+            newFirstSpline,
+            newSecondSpline,
+            a, b, eps);
+
+    PrintPoints(minimalDistance);
     return 0;
 }

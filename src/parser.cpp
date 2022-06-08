@@ -23,11 +23,11 @@ std::string GetStringFromFile(std::string path) {
 
 std::vector<Point> ParsePoints(std::string orig_string) {
     if (orig_string.empty())
-        return std::vector<Point> {};
+        return ArrayPoints {};
     char *new_str = (char*) calloc(orig_string.length(), sizeof(char));
     strcpy(new_str, orig_string.c_str());
     char *token = strtok(new_str, ",");
-    ArrayPoint arr;
+    ArrayPoints arr;
     while (token) {
         Point new_p = {0, 0};
         sscanf(token, "(%Lf; %Lf)", &new_p.x, &new_p.y);

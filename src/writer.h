@@ -1,3 +1,3 @@
 #pragma once
 
-void WritePointsIntoFile(ArrayPoint points, std::string path);
+void WritePointsIntoFile(ArrayPoints points, std::string path);

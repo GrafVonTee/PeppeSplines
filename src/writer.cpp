@@ -4,7 +4,7 @@
 #include "splines.h"
 #include "writer.h"
 
-void WritePointsIntoFile(ArrayPoint points, std::string path) {
+void WritePointsIntoFile(ArrayPoints points, std::string path) {
     using namespace std;
     ofstream oFile(path);
     if (!oFile.is_open()) {

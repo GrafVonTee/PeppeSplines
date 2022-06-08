@@ -8,7 +8,7 @@ struct Sweeps {
     long double A, B, C, F;
 };
 
-typedef std::vector<Point> ArrayPoint;
+typedef std::vector<Point> ArrayPoints;
 
 void CreateSpline(const std::vector<Point> &origValues, std::vector<Point> &newValues);
 long double GetH(std::vector<Point> values, int index);
