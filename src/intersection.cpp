@@ -55,66 +55,45 @@ Point FindIntersection(
 
     return rootPoint;
 }
-/*
-ArrayPoints FindMinimalDistance(const ArrayPoints &spline3) {
+
+long double GetDistance(Point p1, Point p2) {
+    return sqrtl( powl(p1.x - p2.x, 2) + powl(p1.y - p2.y, 2) );
+}
+
+ArrayPoints FindMinimalDistance(
+        const ArrayPoints &spline1,
+        const ArrayPoints &spline2,
+        const ArrayPoints &spline3,
+        long double epsilon)
+{
     int extremumIndex = -1;
 
-    ArrayPoints deriv = GetLocalCentralDerivative(spline3);
-    ArrayPoints der_der = GetLocalCentralDerivative(deriv);
+    ArrayPoints deriv3 = GetLocalCentralDerivative(spline3);
+    ArrayPoints der_der3 = GetLocalCentralDerivative(deriv3);
 
-    for (int i = 0; i < deriv.size() - 1; ++i)
-        if ((deriv[i].y * deriv[i+1].y < 0) && (der_der[i].y > 0))
+    for (int i = 0; i < deriv3.size() - 1; ++i)
+        if ((deriv3[i].y * deriv3[i+1].y <= 0) && (der_der3[i].y > 0))
             extremumIndex = i;
 
-    // Start Recoding Here
+    ArrayPoints result;
 
-    distances = []
-    distances += [abs(y01[0] - y02[0])]
-    distances += [abs(y01[len(y01) - 1] - y02[len(y02) - 1])]
+    if (extremumIndex != -1) {
+        Point intersect1And3Der = FindIntersection(spline1, deriv3, extremumIndex, epsilon);
+        Point intersect2And3Der = FindIntersection(spline2, deriv3, extremumIndex, epsilon);
+        result.push_back(intersect1And3Der);
+        result.push_back(intersect2And3Der);
 
-    if is_extrem:
-
-        x_ap = [x0[extrem_i], x0[extrem_i + 1]]
-
-    y_ap_1 = [y01[extrem_i], y01[extrem_i + 1]]
-    y_ap_2 = [y02[extrem_i], y02[extrem_i + 1]]
-    y_ap_d_3 = [y03_d[extrem_i], y03_d[extrem_i + 1]]
-
-    a = x0[extrem_i - 1]
-    b = x0[extrem_i + 1]
-
-    x1, y1 = intersection(a, b, eps, x_ap, y_ap_1, y_ap_d_3)
-    x2, y2 = intersection(a, b, eps, x_ap, y_ap_2, y_ap_d_3)
-    distances += [abs(y1 - y2)]
-
-    plt.vlines(x1, y1, y2, label="Min distance", color='red')
-    plt.plot(x1, y1, 'go', label='P1')
-    plt.plot(x1, y2, 'bo', label='P2')
-
-    print("Min distance =", min(distances))
-    print("Points of distance:\n"
-          "P1: ({0}, {1})\n"
-          "P2: ({2}, {3})".format
-            (x1, y1, x2, y2))
-    else:
-    if min(distances) == distances[0]:
-    plot_i = 0
-    plot_x = x0[plot_i]
-    else:
-    plot_i = len(x0) - 1
-    plot_x = x0[plot_i]
-
-    plt.vlines(plot_x, y01[plot_i], y02[plot_i], label="Min distance", color='red')
-    plt.plot(plot_x, y01[plot_i], 'go', label="P1")
-    plt.plot(plot_x, y02[plot_i], 'bo', label="P2")
-
-    print("Min distance =", min(distances))
-    print("Points of distance:\n"
-          "P1: ({0}, {1})\n"
-          "P2: ({0}, {2})".format
-            (plot_x, y01[plot_i], y02[plot_i]))
+    } else {
+        if (fabsl(spline3[0].y) < fabsl(spline3[spline3.size() - 1].y)) {
+            result.push_back(spline1[0]);
+            result.push_back(spline2[0]);
+        } else {
+            result.push_back(spline1[spline1.size() - 1]);
+            result.push_back(spline2[spline2.size() - 1]);
+        }
+    }
+    return result;
 }
-*/
 
 ArrayPoints FindDistanceOrIntersection(const ArrayPoints &spline1, const ArrayPoints &spline2,
                                       long double start, long double end, long double epsilon) {
@@ -129,8 +108,8 @@ ArrayPoints FindDistanceOrIntersection(const ArrayPoints &spline1, const ArrayPo
     if (rootIndex != -1)
         somethingBetweenSplines
             .push_back(FindIntersection(spline1, spline3, rootIndex, epsilon));
-    // else
-    //    somethingBetweenSplines = FindMinimalDistance();
+    else
+        somethingBetweenSplines = FindMinimalDistance(spline1, spline2, spline3, epsilon);
 
     return somethingBetweenSplines;
 }

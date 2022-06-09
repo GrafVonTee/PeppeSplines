@@ -10,4 +10,8 @@ Point FindIntersection(
         int rootIndex,
         long double eps);
 
-ArrayPoints FindMinimalDistance();
+ArrayPoints FindMinimalDistance(
+        const ArrayPoints &spline1,
+        const ArrayPoints &spline2,
+        const ArrayPoints &spline3,
+        long double epsilon);
